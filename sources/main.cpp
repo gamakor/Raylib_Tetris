@@ -8,27 +8,36 @@
 
 #define WINDOW_TITLE "Window title"
 
+double lastUpdateTime = 0;
+bool EventTriggered(double interval) {
+    double currentTime = GetTime();
+    if (currentTime - lastUpdateTime >= interval) {
+        lastUpdateTime = currentTime;
+        return true;
+    }
+    return false;
+}
+
 int main(void)
 {
     Color darkBlue = {44,44,127,255};
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
 
-
     Game game = Game();
-    game.grid.Print();
-
-
-
 
     while (!WindowShouldClose())
     {
-        BeginDrawing();
 
-        ClearBackground(darkBlue);
+
         game.HandleInput();
-       game.Draw();
+        if (EventTriggered(.3f)) {
+            game.MoveBlockDown();
+        }
 
+        BeginDrawing();
+        ClearBackground(darkBlue);
+        game.Draw();
         EndDrawing();
     }
 
